@@ -13,15 +13,13 @@ namespace PROG6221POEPART2
         public string name { get; set; }
         public List<Ingredient> Ingredients { get; set; } //lists of ingredient class instances
         public List<Instruction> Instructions { get; set; } //lists of instruction class instances
-        public double totalCalories { get; set; } //total calories of recipe
         public double scale { get; set; } //scale factor for recipe so it can revert back to its original scale (1)
 
-        public Recipe(string name, List<Ingredient> ingredients, List<Instruction> instructions, double totalCalories, double scale)
+        public Recipe(string name, List<Ingredient> ingredients, List<Instruction> instructions, double scale)
         {
             this.name = name;
             this.Ingredients = ingredients;
             this.Instructions = instructions;
-            this.totalCalories = totalCalories;
             this.scale = scale;
         }
 

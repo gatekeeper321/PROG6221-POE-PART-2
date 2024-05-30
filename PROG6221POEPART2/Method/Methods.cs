@@ -21,7 +21,6 @@ namespace PROG6221POEPART2
 
             string recipeName = "";
             double recipeScale = 1;
-            double totalCalories = 0;
 
             string ingredientName = "";
             string ingredientGroup = "";
@@ -159,7 +158,6 @@ namespace PROG6221POEPART2
                     }
                 }
 
-                totalCalories = totalCalories + ingredientCalories;
                 ingredients.Add(new Ingredient(ingredientName, ingredientGroup, ingredientUnit, ingredientQuantity, ingredientCalories));
 
             }
@@ -202,7 +200,7 @@ namespace PROG6221POEPART2
             //-----------------------------------------------------------end of add instruction loop------------------------------------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-            recipes.Add(new Recipe(recipeName, ingredients, instructions, totalCalories, recipeScale));
+            recipes.Add(new Recipe(recipeName, ingredients, instructions, recipeScale));
             return "Recipe Successfully Created!";
 
             //end of createrecipe method
@@ -219,14 +217,14 @@ namespace PROG6221POEPART2
             foreach (Recipe recipe in recipes)
             {
                 ToString = ToString + "\t\tRecipe Name: " + recipe.name;
-                ToString = ToString + "\n\nIngredient\t\tFood Group\t\tQuantity\t\tAmount of calories\n";
+                ToString = ToString + "\n\nIngredient\t\tFood Group\t\tQuantity\t\tAmount of calories";
 
                 foreach (Ingredient ingredient in recipe.Ingredients)
                 {
-                    ToString = ToString + ingredient.name + "\t\t" + ingredient.foodGroup + "\t\t" + ingredient.quantity + " " + ingredient.unit + "\t\t" + ingredient.calories;
+                    ToString = ToString + "\n" + ingredient.name + "\t\t" + ingredient.foodGroup + "\t\t" + ingredient.quantity + " " + ingredient.unit + "\t\t" + ingredient.calories;
                 }
 
-                ToString = ToString + "\n\nTotal Calories " + recipe.totalCalories + "\n\n";
+                ToString = ToString + "\n\nTotal Calories: " + CalculateTotalCalories(recipe.name); //add total calories
 
                 foreach (Instruction instruction in recipe.Instructions)
                 {
@@ -237,7 +235,7 @@ namespace PROG6221POEPART2
                 Console.WriteLine("-------------------------------------------------------------------------------------------------------");
             }
             return ToString;
-            
+
         }
 
         public string ViewRecipe()
@@ -262,7 +260,7 @@ namespace PROG6221POEPART2
                         ToString = ToString + ingredient.name + "\t\t" + ingredient.foodGroup + "\t\t" + ingredient.quantity + " " + ingredient.unit + "\t\t" + ingredient.calories;
                     }
 
-                    ToString = ToString + "\n\nTotal Calories " + recipe.totalCalories + "\n\n";
+                    ToString = ToString + "\n\nTotal Calories: " + CalculateTotalCalories(recipe.name); // add total caloires
 
                     foreach (Instruction instruction in recipe.Instructions)
                     {
@@ -279,13 +277,12 @@ namespace PROG6221POEPART2
 
         public string ScaleRecipe()
         {
-            string ToString = "";
             string recipeName = "";
             string select = "";
 
             bool valid = false;
 
-            Console.Clear();
+            //Console.Clear();
 
             Console.WriteLine("Enter the name of the recipe you would like to scale:");
             recipeName = Console.ReadLine();
@@ -389,9 +386,31 @@ namespace PROG6221POEPART2
             return "Recipe Successfully Erased!";
         }
 
+        public double CalculateTotalCalories(string recipeName)
+        {
+            double totalCalories = 0;
+
+            foreach (Recipe recipe in recipes)
+            {
+                if (recipe.name == recipeName)
+                {
+                    foreach (Ingredient ingredient in recipe.Ingredients)
+                    {
+                        totalCalories += ingredient.calories;
+                    }
+                }
+            }
+
+            return totalCalories;
+        }
+
         static void HandleExceededCalories(string message)
         {
             Console.WriteLine(message);
+        }
+        public void AddRecipe(Recipe recipe)
+        {
+            recipes.Add(recipe);
         }
     }
 }
