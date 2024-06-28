@@ -8,11 +8,33 @@ namespace PROG6221POEPART2
 {
     internal class Methods
     {
+        public delegate void ExcededCalories(string recipeName, double totalCalories);
+
+        public event ExcededCalories ExcededCaloriesEvent;
+
+        public void OnExcededCalories(string recipeName, double totalCalories)
+        {
+            ExcededCaloriesEvent?.Invoke(recipeName, totalCalories);
+        }
+
+        public Methods()
+        {
+            ExcededCaloriesEvent += HandleExcededCalories;
+        }
+
+        private void HandleExcededCalories(string recipeName, double totalCalories)
+        {
+            Console.WriteLine("------- RECIPE EXCEEDS 300 CALORIES -------");
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //-----END OF DELEGATE------------------------------------------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
         List<Recipe> recipes = new List<Recipe>();
         List<Ingredient> ingredients = new List<Ingredient>();
         List<Instruction> instructions = new List<Instruction>();
-
-        public event Action<string> ExceededCalories;
 
         public string CreateRecipe()
         {
@@ -238,7 +260,14 @@ namespace PROG6221POEPART2
 
                 ToString = ToString + "\n\n";
                 Console.WriteLine("-------------------------------------------------------------------------------------------------------");
+
+                if (CalculateTotalCalories(recipe.name) > 300) //delegate event to check if recipe exceeds 300 calories
+                {
+                    OnExcededCalories(recipe.name, CalculateTotalCalories(recipe.name));
+                }
+
             }
+
             return ToString;
 
         }
@@ -273,6 +302,11 @@ namespace PROG6221POEPART2
                     }
 
                     ToString = ToString + "\n\n";
+                }
+
+                if (CalculateTotalCalories(recipe.name) > 300) //delegate event to check if recipe exceeds 300 calories
+                {
+                    OnExcededCalories(recipe.name, CalculateTotalCalories(recipe.name));
                 }
 
                 Console.WriteLine("-------------------------------------------------------------------------------------------------------");
@@ -411,10 +445,6 @@ namespace PROG6221POEPART2
             return totalCalories;
         }
 
-        static void HandleExceededCalories(string message)
-        {
-            Console.WriteLine(message);
-        }
         public void AddRecipe(Recipe recipe)
         {
             recipes.Add(recipe);
